@@ -1,0 +1,85 @@
+<p>Proiect2-D52-Y13</p>
+<h1 style="color: #5e9ca0; text-align: center;">Proiect 2 - Echipa Y13</h1>
+<h2 style="text-align: right;"><span style="color: #993366;"><strong>Baicu Ioan &amp; Paxaman Adelina</strong></span></h2>
+<h1 style="color: #2e6c80; text-align: center;">D52 Sistem pentru acordat chitara</h1>
+<p>&nbsp;</p>
+<h1><span style="color: #ff9900;">Mod de implementare</span></h1>
+<h3>Proiectul este un acordor de chitara care va functiona in felul urmator :se va selecta o coarda ce se doreste acordata prin apasarea unui buton corespunzator corzii. Dupa aceasta apasare, prin intermediul unui microfon cu condensator se va prelua sunetul caruia i se va masura frecventa si se va compara cu frecventa de referinta a notei corespunzatoare corzii acordate. Stadiul de acordare va fi afisat cu ajutorul ledurilor dupa cum urmeaza:</h3>
+<ul>
+<li class="level1">
+<h2 class="li"><span style="color: #ff0000;">ledul rosu din stanga : frecventa este prea joasa</span></h2>
+</li>
+<li class="level2">
+<h2 class="li"><span style="color: #008000;">ledul verde din centru : frecventa este cea corecta</span></h2>
+</li>
+<li class="level2">
+<h2 class="li"><span style="color: #ff0000;">ledul rosu din dreapta : frecventa este prea inalta</span></h2>
+</li>
+</ul>
+<h2><strong>Determinarea frecventei</strong></h2>
+<h3>Pentru masurarea frecventei se va urmari un algoritm ce presupune numararea fronturilor crescatoare ale semnalului intr-o secunda.&nbsp; Semnalul de la microfon va fi preamplificat (am ales un amplificator audio de tip LM386L) si apoi convertit intr-un semnal dreptunghiular, urmand sa fie aplicat pe portul cu T1 pin2 (PB1). Vom numara fronturile crescatoare si vom realiza un delay de o secunda dupa care vom opri timer-ul, urmand sa citim valoarea registrului TCNT1 ce contine numarul de fronturi crescatoare. In functie de numarul acestora se va determina frecventa dupa un algoritm simplu pe care il vom detalia la modul de implementare software.</h3>
+<h1><span style="color: #ff9900;">Descrierea hardware</span></h1>
+<p>Poze stadiu curent:</p>
+<p>Saptamana 5:</p>
+<p><img src="schema.JPG" alt="img2" /></p>
+<p>Saptamana 7:</p>
+<p><img src="1.JPG" alt="img1" /></p>
+<p>Saptamana 10:</p>
+<p><img src="bread.JPG" alt="img2" /></p>
+<p>Schema electrica a circuitului de intrare</p>
+<p><img src="schema_osc.JPG" alt="img2" /></p>
+<p>Semnalul afisat pe osciloscop este obtinut dintr-un semnal sinusoidal generat pentru simulare.</p>
+<p><img src="osciloscop.JPG" alt="img2" /></p>
+<p>Schema electrica a circuitului</p>
+<p><img src="sch_ver2.JPG" alt="img2" /></p>
+<p>Bill of Materials</p>
+<p><img src="boom ver2.JPG" alt="img2" /></p>
+<h1><span style="color: #ff9900;">Saptamana 8:Descrierea software</span></h1>
+<h3>In momentul de fata pe microcontroller ruleaza softul ce returneaza, la apasarea tastei "?", numele si numarul echipei cat si luminarea LED-ului cu 3 frecvente diferite la apasarea unui buton.</h3>
+<p>Saptamana 11:</p>
+<h3>Semnalul va fi aplicat pe portul PB1 asa cum am precizat la modul de implementare.</h3>
+<h3>Vom activa intreruperile pentru timer1 si vom numara aparitiile acestora. Overflow inseamna ca timer1 a facut 2^16 numarari.</h3>
+<h3>Pentru calculul frecventei se va folosi ecuatia : F = k*2^16 + TCNT1 ,unde k reprezinta numarul de overflow-uri intr-o secunda.</h3>
+<h3>Pentru a semnaliza acordajul prin apriderea LED-urilor vom folosi porturile:</h3>
+<h3>PA0-rosu_low, PA1-verde_acordat, PA2-rosu_high.</h3>
+<h3>In urma compilarii am obtinut aceste rezultate:</h3>
+<p>&nbsp;(Data Stack size: 256 byte(s)</p>
+<p>Estimated Data Stack usage: 35 byte(s)</p>
+<p>&nbsp;</p>
+<p>RAM Global variables area: 0x160 to 0x167</p>
+<p>RAM Global variables size: 8 byte(s)</p>
+<p>&nbsp;</p>
+<p>Hardware Stack area: 0x168 to 0x45F</p>
+<p>Hardware Stack size: 760 byte(s))</p>
+<h3>Si astfel am constat ca resursele necesare rularii softului sunt suficiente.</h3>
+<h1><span style="color: #ff9900;">Rezultate si concluzii</span></h1>
+<h3>&nbsp;</h3>
+<p>Prima problema pe care am intampinat-o a&nbsp; fost ca am avut cablajul intrerupt dintre pinul Rx de pe placa si microcontroller. Aceasta problema a fost identificata folosind aparatul de masura setat pe &ldquo;piuitoare&rdquo; reusind sa&nbsp; descoperim ca intreruperea era exact langa pinul de la marginea placutei. Apoi am pilit putin cablajul si am prelungit cu fludor traseul in zona unde era intrerupt. Se poate vedea &icirc;n poza de mai jos problema solutionata.</p>
+<p><img src="spike.JPG" alt="img2" /></p>
+<p>Intr-un final am reusit respectarea cerintelor folosindu-ne de o schema simpla studiata in cadrul laboratorului de IEM semetrul trecut.</p>
+<p><img src="iemm.JPG" alt="img2" /></p>
+<p>Aceasta este schema ce in cadrul laboratorului deservea ca ohmmetru cu scara liniara. Principiul era urmatorul :</p>
+<ul>
+<li>aplicam un semnal la intrare;</li>
+<li>Masuram semnalul la iesire;</li>
+<li>Aflam amplificarea A=Vout/Vin;</li>
+<li>A=-Rx/R2 = &gt; ; Rx= ... ;</li>
+</ul>
+<p>Noi am folosit Rx si R2 calculate astfel incat sa avem o amplificare de aproximativ 40, intrucat tensiunea de la intrarea acordorului nostru poate proveni de la un microfon sau de la o chitara (dispozitive ce pot furniza in jur de 0.2 V).</p>
+<p>Astfel de la 0.2 V la intrare vom obtine la iesire o tensiune de aproximativ 4V.</p>
+<p>Semnalul obtinut de la iesirea amplificatorului a fost aplicat pe pinul PB1(T1) urmand ca din setarile soft sa numaram cu ajutorul timerului 1 fronturile crescatoare ale unui clock extern pentru un timp de o secunda, astfel acest numar de fronturi este chiar frecventa notei pe care o masuram.</p>
+<h1>Poza cu rezultatul final &nbsp;</h1>
+<p><img src="poza.JPG" alt="img2" /></p>
+<p>&nbsp;</p>
+<p>Aceasta idee este mult mai optima decat cele pe care le-am gandit la inceput deoarece nu consuma multe resurse asemeni metodei ce implementa FFT.</p>
+<p>Initial am dorit realizarea unui acordor cu afisaj pe baza de diode LED, dar pentru rigurozitate si pentru a putea afisa atat denumirea corzii cat si frecventa acesteia am ales folosirea unui LCD 16x2.</p>
+<h1><span style="color: #ff9900;">Bibliografie</span></h1>
+<h3>Schema amplificatorului : &nbsp;</h3>
+<h3><a href="http://ham.elcom.pub.ro/iem-lab/platf/iem-lab5.pdf">http://ham.elcom.pub.ro/iem-lab/platf/iem-lab5.pdf</a>&nbsp;</h3>
+<h3>Informatii despre configurarea LCD-ului&nbsp;</h3>
+<h3><a href="http://ham.elcom.pub.ro/proiect2/files/lcd.pdf">http://ham.elcom.pub.ro/proiect2/files/lcd.pdf</a></h3>
+<h3>Foi de catalog AT Mega16</h3>
+<h3><a href="http://ham.elcom.pub.ro/proiect2/files/atmega16.pdf">http://ham.elcom.pub.ro/proiect2/files/atmega16.pdf</a></h3>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
